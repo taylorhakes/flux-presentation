@@ -1,4 +1,5 @@
 import React, { Children, PropTypes } from 'react';
+import traverseAllChildren from 'react/lib/traverseAllChildren';
 import './Deck.less';
 
 export default class Deck {
@@ -8,7 +9,6 @@ export default class Deck {
 
 	render() {
 		const { children, currentSlide } = this.props;
-
 		return (
 			<div className='Deck'>
 				<div className='Deck-container'
