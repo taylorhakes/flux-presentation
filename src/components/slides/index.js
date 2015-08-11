@@ -82,7 +82,11 @@ $input2.on('input', function() {
 			{
 `app.controller('myCtrl', function($scope) {
   $scope.onSubmit = function onSubmit() {
-  	// Do something ajax
+
+    // Do something AJAX
+    myApi(function(result) {
+       $score.myInput = result;
+    });
   };
   $scope.myInput = "";
 });`
@@ -102,7 +106,98 @@ $input2.on('input', function() {
 		<img src="img/multi-flux.svg" />
 	</div>,
 	<div>
-		<img src="img/flux-facebook.png" />
+		<img src="img/flux.svg" />
+	</div>,
+	<div>
+		<div>Action</div>
+		<Highlight className="javascript">
+			{
+`function inputChanged(value) {
+  return {
+    type: 'INPUT_CHANGED',
+    value: value
+  };
+};`
+			}
+		</Highlight>
+
+		<Highlight className="javascript">
+			{
+				`dispatch(inputChanged(value));`
+			}
+		</Highlight>
+	</div>,
+	<div>
+		<div>Dispatcher/Store</div>
+		<Highlight className="javascript">
+			{
+`var currentState = storeFn(undefined, {type: 'INIT'}),
+  listeners = [],
+  storeFn;
+
+function dispatch(action) {
+  currentState = storeFn(currentState, action);
+  listeners.forEach(listener => listener());
+}
+
+function getState() {
+  return currentState;
+}
+
+function subscribe(listener) {
+  listeners.push(listener);
+
+  return function unsubscribe() {
+    var index = listeners.indexOf(listener);
+    listeners.splice(index, 1);
+  };
+}`
+			}
+		</Highlight>
+	</div>,
+	<div>
+		<div>Store</div>
+		<Highlight className="javascript">
+			{
+`function storeFn(oldState, action) {
+  oldState = typeof oldState === 'undefined' ? '' : oldState;
+
+  switch (action.type) {
+    case 'INPUT_CHANGED':
+      return action.value;
+    default:
+      return oldState;
+  }
+}`
+			}
+		</Highlight>
+	</div>,
+	<div>
+		<div>View</div>
+		<Highlight>
+			{
+`var myView = React.createClass({
+  componentDidMount: function () {
+    store.subscribe(this.onStoreChange.bind(this));
+  },
+  onStoreChange: function() {
+    this.setState({
+      value: store.getState();
+    });
+  },
+  onChange: function(e) {
+    store.dispatch(inputChanged(e.target.value));
+  },
+  render: function () {
+    return (
+      <input type="text"
+        value={this.state.value}
+        onChange={this.handleChange} />
+    );
+  }
+});`
+			}
+		</Highlight>
 	</div>,
 	<div style={{fontSize: '3rem'}}>
 		<ul>
@@ -120,5 +215,13 @@ $input2.on('input', function() {
 			<li>Fluxette</li>
 		</ul>
 		<a href="https://github.com/voronianski/flux-comparison">Flux Comparison</a>
-	</div>
+	</div>,
+	<div>
+		<div>
+			<a href="https://medium.com/@dan_abramov/the-evolution-of-flux-frameworks-6c16ad26bb31">Evolution of Flux Frameworks</a>
+		</div>
+		<div>
+			Dan Abamov
+		</div>
+	</div>,
 ];
