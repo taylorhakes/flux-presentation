@@ -22,7 +22,7 @@ export default [
 var value = $input.val();
 
 // Update the value
-$input.val('update');`
+$input.val('new value');`
 			}
 		</Highlight>
 	</div>,
@@ -156,7 +156,7 @@ function subscribe(listener) {
 		</Highlight>
 	</div>,
 	<div>
-		<div>Store</div>
+		<div>Store Function</div>
 		<Highlight className="javascript">
 			{
 `function storeFn(oldState, action) {
@@ -176,23 +176,28 @@ function subscribe(listener) {
 		<div>View</div>
 		<Highlight>
 			{
-`var myView = React.createClass({
+`var MyInput = React.createClass({
+  getInitialState() {
+    return {
+      value: getState()
+    };
+  },
   componentDidMount: function () {
-    store.subscribe(this.onStoreChange.bind(this));
+    subscribe(this.onStoreChange);
   },
   onStoreChange: function() {
     this.setState({
-      value: store.getState();
+      value: getState()
     });
   },
-  onChange: function(e) {
-    store.dispatch(inputChanged(e.target.value));
+  handleChange: function(e) {
+    dispatch(inputChanged(e.target.value));
   },
   render: function () {
     return (
       <input type="text"
-        value={this.state.value}
-        onChange={this.handleChange} />
+      value={this.state.value}
+      onChange={this.handleChange} />
     );
   }
 });`
@@ -221,7 +226,7 @@ function subscribe(listener) {
 			<a href="https://medium.com/@dan_abramov/the-evolution-of-flux-frameworks-6c16ad26bb31">Evolution of Flux Frameworks</a>
 		</div>
 		<div>
-			Dan Abamov
+			Dan Abramov
 		</div>
 	</div>,
 ];
